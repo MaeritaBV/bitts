@@ -1,0 +1,460 @@
+/****************************************************************************
+ * CODE FILE   : stylesheet.css
+ * Project     : BitTS - BART it TimeSheet
+ * Author(s)   : Erwin Beukhof
+ * Date        : 16 april 2013
+ * Description : Stylesheet
+ *
+ *               Framework: osCommerce, Open Source E-Commerce Solutions
+ *               http://www.oscommerce.com
+ */
+
+.boxTitle { font-family: Verdana, Arial, sans-serif; font-size: 11px; font-weight: bold; }
+.boxText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.errorBox { font-family : Verdana, Arial, sans-serif; font-size : 10px; background: #ffb3b5; font-weight: bold; }
+.submitLinkHeaderNavigation { font-family: Verdana, Arial, sans-serif; font-size: 10px; font-weight : bold; color: #ffffff; text-decoration: inherit; background-color: transparent; border: none; padding: 0px; cursor: pointer; cursor: hand; text-align: center;}
+.submitLinkInfoBoxHeading { font-family: Verdana, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #ffffff; text-decoration: inherit; background-color: transparent; border: none; padding: 0px; cursor: pointer; cursor: hand; text-align: left;}
+.submitLinkInfoBoxContents { font: inherit; color: inherit; text-decoration: inherit; background-color: transparent; border: none; padding: 0px; cursor: pointer; cursor: hand; text-align: left;}
+input:disabled { color:#000000; }
+select:disabled { color:#000000; }
+
+BODY {
+  background: #ffffff;
+  color: #000000;
+  margin: 0px;
+}
+
+A {
+  color: #000000;
+  text-decoration: none;
+}
+
+A:hover {
+  color: #AABBDD;
+  text-decoration: underline;
+}
+
+FORM {
+	display: inline;
+}
+
+TR.header {
+  background: #ffffff;
+}
+
+TR.headerNavigation {
+  background: #0071c1;
+}
+
+TD.headerNavigation {
+  /*** Balk bovenin onder logo ***/
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #0071c1;
+  color: #ffffff;
+  font-weight : bold;
+}
+
+A.headerNavigation { 
+  color: #FFFFFF; 
+}
+
+A.headerNavigation:hover {
+  color: #ffffff;
+}
+
+TR.headerError {
+  background: #ff0000;
+}
+
+TD.headerError {
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  background: #ff0000;
+  color: #ffffff;
+  font-weight : bold;
+  text-align : center;
+}
+
+TR.headerInfo {
+  background: #008fc3;
+}
+
+TD.headerInfo {
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  background: #008fc3;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+}
+
+TR.footer {
+  background: #0071c1;
+}
+
+TD.footer {
+  /*** Balk onderin met datum etc. ***/
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #0071c1;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.infoBox {
+  /*** Rand om de boxes ***/
+  background: #0071c1;
+}
+
+.infoBoxContents {
+  /*** Inhoud boxes ***/
+  background: #ffffff;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+}
+
+.infoBoxContentsRight {
+  /*** Inhoud boxes ***/
+  background: #ffffff;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  text-align: right;
+}
+
+.infoBoxNotice {
+  background: #FF8E90;
+}
+
+.infoBoxNoticeContents {
+  background: #FFE6E6;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+}
+
+TD.infoBoxHeading {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  background: #0071c1;
+  color: #ffffff;
+}
+
+TD.infoBox, SPAN.infoBox {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+}
+
+/*** Box (midden) met producten (2x; even & oneven) ***/
+
+TR.accountHistory-odd, TR.addressBook-odd, TR.alsoPurchased-odd, TR.payment-odd, TR.entryListing-odd, TR.productReviews-odd, TR.upcomingProducts-odd, TR.shippingOptions-odd {
+  background: #f8f8f9;
+}
+
+TR.accountHistory-even, TR.addressBook-even, TR.alsoPurchased-even, TR.payment-even, TR.entryListing-even, TR.productReviews-even, TR.upcomingProducts-even, TR.shippingOptions-even {
+  background: #e5e5e6;
+}
+
+TR.projectListing-red {
+  background: #ff0000;
+}
+
+TR.projectListing-orange {
+  background: #ff7f00;
+}
+
+TR.projectListing-green {
+  background: #00ff00;
+}
+
+TR.selectableRowMouseOver-odd {
+  background-color: #0071c1;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+TR.selectableRowMouseOver-even {
+  background-color: #0071c1;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+TABLE.projectListing, TABLE.entryListing, TABLE.calendar , TABLE.item_entry, TABLE.report_listing{
+  border: 1px;
+  border-style: solid;
+  border-color: #b6b7cb;
+  border-spacing: 1px;
+}
+
+.projectListing-heading, .entryListing-heading, .calendar-heading {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #b6b7cb;
+  color: #FFFFFF;
+  font-weight: bold;
+  vertical-align: top;
+}
+
+TD.projectListing-data, TD.entryListing-data {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  vertical-align: top;
+}
+
+TD.calendar-weekday {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #f8f8f9;
+  text-align: center;
+  vertical-align: top;
+}
+
+TD.calendar-weekend {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #b6b7cb;
+  text-align: center;
+  vertical-align: top;
+}
+
+TD.calendar-today {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #0071c1;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: top;
+}
+
+TD.calendar-notavailable {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #ffffff;
+  text-align: center;
+  vertical-align: top;
+}
+
+TD.large-calendar-weekday {
+  border: 1px solid #b6b7cb;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #f8f8f9;
+  text-align: center;
+  vertical-align: top;
+  width: 50px;
+}
+
+TD.large-calendar-weekday-minimum-not-met {
+  border: 1px solid #b6b7cb;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #f8f8f9;
+  color: #ff0000;
+  text-align: center;
+  vertical-align: top;
+  width: 50px;
+}
+
+TD.large-calendar-weekend {
+  border: 1px solid #b6b7cb;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #b6b7cb;
+  text-align: center;
+  vertical-align: top;
+  width: 50px;
+}
+
+TD.large-calendar-today {
+  border: 1px solid #0071c1;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #0071c1;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: top;
+  width: 50px;
+}
+
+TD.large-calendar-notavailable {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #ffffff;
+  text-align: center;
+  vertical-align: top;
+  width: 50px;
+}
+
+TD.item_entry, TD.report_listing {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #f8f8f9;
+}
+
+TD.login_error {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #ff0000;
+  color: #ffffff;
+  font-weight : bold;
+  text-align : center;
+}
+
+TD.entry_error_low {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #00ff00;
+  color: #ffffff;
+  font-weight : bold;
+  text-align : center;
+}
+
+TD.entry_error_middle {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #ff7f00;
+  color: #ffffff;
+  font-weight : bold;
+  text-align : center;
+}
+
+TD.entry_error_high {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  background: #ff0000;
+  color: #ffffff;
+  font-weight : bold;
+  text-align : center;
+}
+
+A.pageResults {
+  color: #0000FF;
+}
+
+A.pageResults:hover {
+  color: #0000FF;
+  background: #FFFF33;
+}
+
+TD.pageHeading, DIV.pageHeading {
+  padding: 0;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0071c1;
+}
+
+TR.subBar {
+  background: #f4f7fd;
+}
+
+TD.subBar {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  color: #000000;
+}
+
+TD.main, P.main {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+TD.smallText, SPAN.smallText, P.smallText {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+}
+
+TD.accountCategory {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 13px;
+  color: #aabbdd;
+}
+
+TD.fieldKey {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+TD.fieldValue {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12px;
+}
+
+TD.tableHeading {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+SPAN.newItemInCart {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  color: #ff0000;
+}
+
+CHECKBOX, INPUT, RADIO, SELECT {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+}
+
+TEXTAREA {
+  width: 100%;
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 11px;
+}
+
+SPAN.greetUser {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12px;
+  color: #f0a480;
+  font-weight: bold;
+}
+
+TABLE.formArea {
+  background: #f1f9fe;
+  border-color: #7b9ebd;
+  border-style: solid;
+  border-width: 1px;
+}
+
+TD.formAreaTitle {
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+SPAN.markProductOutOfStock {
+  font-family: Tahoma, Verdana, Arial, sans-serif;
+  font-size: 12px;
+  color: #c76170;
+  font-weight: bold;
+}
+
+SPAN.productSpecialPrice {
+  font-family: Verdana, Arial, sans-serif;
+  color: #ff0000;
+}
+
+SPAN.errorText {
+  font-family: Verdana, Arial, sans-serif;
+  color: #ff0000;
+}
+
+.moduleRow { }
+.moduleRowOver { background-color: #D7E9F7; cursor: pointer; cursor: hand; }
+.moduleRowSelected { background-color: #E9F4FC; }
+
+.checkoutBarFrom, .checkoutBarTo { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #8c8c8c; }
+.checkoutBarCurrent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; }
+
+/* message box */
+
+.messageBox { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-size: 10px; background-color: #ffb3b5; }
+.messageStackSuccess { font-family: Verdana, Arial, sans-serif; font-size: 10px; background-color: #99ff00; }
+
+/* input requirement */
+
+.inputRequirement { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
