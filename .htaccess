@@ -1,0 +1,7 @@
+# Uncomment following lines when ssl is required
+# (in order to enforce https)
+
+SSLRequireSSL
+ErrorDocument 403 https://www.maerita.nl/bitts/
+Header append X-FRAME-OPTIONS "SAMEORIGIN"
+
