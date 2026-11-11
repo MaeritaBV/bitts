@@ -1,134 +1,122 @@
 <?php
-/****************************************************************************
- * CODE FILE   : application_top.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 22 october 2026
- * Description : .....
- *               .....
- *               Framework: osCommerce, Open Source E-Commerce Solutions
- *               http://www.oscommerce.com
+/**
+ * application_top.php
+ *
+ * Topmost program part. Contains all requires needed for program execution.
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 11 november 2026
  */
 
-  // set the level of error reporting
-  error_reporting(E_ALL & ~E_NOTICE);
+// set the level of error reporting
+error_reporting(E_ALL & ~E_NOTICE);
 
-  // Start the session
-  session_start();
+// Start the session
+session_start();
 
-  // Include server parameters
-  require('includes/configuration.php');
+// Include server parameters
+require('../config/config.php');
 
-  // Additional definitions
-  define('FPDF_FONTPATH', DIR_WS_INCLUDES . '/fpdf_fonts/');
+// Additional definitions
+define('FPDF_FONTPATH', DIR_WS_INCLUDES . 'fpdf_fonts/');
 
-  // Include the list of application filenames
-  require(DIR_WS_INCLUDES . 'filenames.php');
+// Include the list of application filenames
+require DIR_WS_CONFIG . 'filenames.php';
 
-  // Include the list of application database tables
-  require(DIR_WS_INCLUDES . 'database_tables.php');
+// Include the list of application database tables
+require DIR_WS_CONFIG . 'database_tables.php';
 
-  // Customization for the design layout
-  define('BOX_WIDTH', 175); // how wide the boxes should be in pixels (default: 175)
+// Customization for the design layout
+define('BOX_WIDTH', 175); // how wide the boxes should be in pixels (default: 175)
 
-  // Include the database functions
-  require(DIR_WS_CLASSES . 'database.php');
+// Include the database functions
+require(DIR_WS_CLASSES . 'database.php');
 
-  // Make a connection to the database...
-  $database = new database();
-  $_SESSION['database'] = $database;
-  $database->connect() or die('Unable to connect to database server!');
+// Make a connection to the database...
+$database = new database();
+$_SESSION['database'] = $database;
+$database->connect() or die('Unable to connect to database server!');
 
-  // Set the application parameters
-  $configuration_query = $database->query('select configuration_key, configuration_value from ' . TABLE_CONFIGURATION);
-  while ($configuration_result = $database->fetch_array($configuration_query)) {
-    define($configuration_result['configuration_key'], $configuration_result['configuration_value']);
+// Set the application parameters
+$configuration_query = $database->query('select configuration_key, configuration_value from ' . TABLE_CONFIGURATION);
+while ($configuration_result = $database->fetch_array($configuration_query)) {
+  define($configuration_result['configuration_key'], $configuration_result['configuration_value']);
+}
+
+// Define general functions used application-wide
+require      DIR_WS_FUNCTIONS . 'sessions.php';
+require_once DIR_WS_SUPPORT .   'DateTimeHelper.php';
+require_once DIR_WS_SUPPORT .   'DBHelper.php';
+require_once DIR_WS_SUPPORT .   'GeneralHelper.php';
+require_once DIR_WS_SUPPORT .   'HTMLHelper.php';
+require_once DIR_WS_SUPPORT .   'JSHelper.php';
+require_once DIR_WS_SUPPORT .   'SessionHelper.php';
+
+use BitTS\Support\GeneralHelper;
+
+// Set the language
+if (!isset($_SESSION['language']) || isset($_GET['language'])) {
+  include(DIR_WS_CLASSES . 'language.php');
+  $lng = new language();
+
+  if (isset($_GET['language']) && !GeneralHelper::is_null($_GET['language'])) {
+    $lng->set_language($_GET['language']);
+  } else {
+    $lng->get_browser_language();
   }
 
-  // Define general functions used application-wide
-  require(DIR_WS_FUNCTIONS . 'sessions.php');
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
-  //require_once DIR_FS_FUNCTIONS . 'algemeen.php';
-  //require_once DIR_FS_CLASSES .   'AdresUtil.php';
-  //require_once DIR_FS_CLASSES .   'BarcodeUtil.php';
-  //require_once DIR_FS_CLASSES .   'DateUtil.php';
-  //require_once DIR_FS_CLASSES .   'DBUtil.php';
-  //require_once DIR_FS_CLASSES .   'FSUtil.php';
-  //require_once DIR_FS_CLASSES .   'HTMLUtil.php';
-  //require_once DIR_FS_CLASSES .   'ImageUtil.php';
-  //require_once DIR_FS_CLASSES .   'LogUtil.php';
-  //require_once DIR_FS_CLASSES .   'MailUtil.php';
-  //require_once DIR_FS_CLASSES .   'NetworkUtil.php';
-  //require_once DIR_FS_CLASSES .   'StringUtil.php';
-  //require_once DIR_FS_CLASSES .   'ApiUtil.php';
-  //require_once DIR_FS_CLASSES .   'UUIDUtil.php';
-  //require_once DIR_FS_CLASSES .   'XMLUtil.php';
+  $_SESSION['language'] = $lng->language['directory'];
+  $_SESSION['languages_id'] = $lng->language['id'];
+}
 
-  // Set the language
-  if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-    include(DIR_WS_CLASSES . 'language.php');
-    $lng = new language();
+// Include the language translations
+require(DIR_WS_LANG . $_SESSION['language'] . '.php');
 
-    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
-      $lng->set_language($_GET['language']);
-    } else {
-      $lng->get_browser_language();
-    }
+// infobox
+require(DIR_WS_CLASSES . 'boxes.php');
 
-    $_SESSION['language'] = $lng->language['directory'];
-    $_SESSION['languages_id'] = $lng->language['id'];
+// Include the employee and profile classes
+require(DIR_WS_CLASSES . 'employee.php');
+require(DIR_WS_CLASSES . 'profile.php');
+//require(DIR_WS_CLASSES . 'benefit.php');
+
+// Include the project and related classes
+require(DIR_WS_CLASSES . 'customer.php');
+require(DIR_WS_CLASSES . 'business_unit.php');
+require(DIR_WS_CLASSES . 'project.php');
+require(DIR_WS_CLASSES . 'category.php');
+require(DIR_WS_CLASSES . 'role.php');
+require(DIR_WS_CLASSES . 'employee_role.php');
+require(DIR_WS_CLASSES . 'tariff.php');
+require(DIR_WS_CLASSES . 'unit.php');
+
+// Include the timesheet and related classes
+require(DIR_WS_CLASSES . 'timesheet.php');
+require(DIR_WS_CLASSES . 'activity.php');
+
+// If action == logout clear server & session variables
+if ( isset( $_POST['action'] ) && $_POST['action']=='logout') {
+  if ( isset( $_SERVER['LOGON_USER'] ) ) {
+    unset( $_SERVER['LOGON_USER'] );
   }
+  unset( $_SESSION['employee_login'] );
+  unset( $_SESSION['employee'] );
+  $_POST['action']='';
+}
 
-  // Include the language translations
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
-
-  // Include the password crypto functions
-  require(DIR_WS_FUNCTIONS . 'password_funcs.php');
-
-  // infobox
-  require(DIR_WS_CLASSES . 'boxes.php');
-
-  // Include the employee and profile classes
-  require(DIR_WS_CLASSES . 'employee.php');
-  require(DIR_WS_CLASSES . 'profile.php');
-  //require(DIR_WS_CLASSES . 'benefit.php');
-
-  // Include the project and related classes
-  require(DIR_WS_CLASSES . 'customer.php');
-  require(DIR_WS_CLASSES . 'business_unit.php');
-  require(DIR_WS_CLASSES . 'project.php');
-  require(DIR_WS_CLASSES . 'category.php');
-  require(DIR_WS_CLASSES . 'role.php');
-  require(DIR_WS_CLASSES . 'employee_role.php');
-  require(DIR_WS_CLASSES . 'tariff.php');
-  require(DIR_WS_CLASSES . 'unit.php');
-
-  // Include the timesheet and related classes
-  require(DIR_WS_CLASSES . 'timesheet.php');
-  require(DIR_WS_CLASSES . 'activity.php');
-
-  // If action == logout clear server & session variables
-  if ( isset( $_POST['action'] ) && $_POST['action']=='logout') {
-    if ( isset( $_SERVER['LOGON_USER'] ) ) {
-      unset( $_SERVER['LOGON_USER'] );
-    }
-    unset( $_SESSION['employee_login'] );
-    unset( $_SESSION['employee'] );
-    $_POST['action']='';
+// Verify if current user is not already logged-in
+if (!isset( $_SESSION['employee_login'] ) || GeneralHelper::is_null($_SESSION['employee_login'])) {
+  if ( isset( $_SERVER['LOGON_USER'] ) && $_SERVER['LOGON_USER'] != '' ) {
+    $_SESSION['employee_login'] = $_SERVER['LOGON_USER'];
+  } else if ( isset( $_SERVER['AUTH_USER'] ) && $_SERVER['AUTH_USER'] != '' ) {
+    $_SESSION['employee_login'] = $_SERVER['AUTH_USER'];
   }
+}
 
-  // Verify if current user is not already logged-in
-  if (!isset( $_SESSION['employee_login'] ) || !tep_not_null($_SESSION['employee_login'])) {
-    if ( isset( $_SERVER['LOGON_USER'] ) && $_SERVER['LOGON_USER'] != '' ) {
-      $_SESSION['employee_login'] = $_SERVER['LOGON_USER'];
-    } else if ( isset( $_SERVER['AUTH_USER'] ) && $_SERVER['AUTH_USER'] != '' ) {
-      $_SESSION['employee_login'] = $_SERVER['AUTH_USER'];
-    }
-  }
-
-  // If logged-in now, create the employee object
-  if (isset( $_SESSION['employee_login'] ) && tep_not_null($_SESSION['employee_login'])) {
-    $_SESSION['employee'] = new employee($_SESSION['employee_login'], 'employees_login');
-  }
-?>
+// If logged-in now, create the employee object
+if (isset( $_SESSION['employee_login'] ) && !GeneralHelper::is_null($_SESSION['employee_login'])) {
+  $_SESSION['employee'] = new employee($_SESSION['employee_login'], 'employees_login');
+}

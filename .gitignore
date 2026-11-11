@@ -1,2 +1,5 @@
-includes/configuration.php
-includes/configuration.php.20200826
+_temp
+config/config.php
+config/config.php.20200826
+config/database.php
+.DS_Store

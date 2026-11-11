@@ -1,11 +1,17 @@
 <?php
-/****************************************************************************
- * CODE FILE   : business_unit_entry.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 22 october 2026
- * Description : Business Unit entry fields
+/**
+ * business_unit_entry.php
+ *
+ * Business Unit entry fields
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 04 november 2026
  */
+
+use BitTS\Support\HTMLHelper;
 ?>
   <!-- business_units_entry //-->
   <script language="javascript">
@@ -25,22 +31,22 @@
               </td>
             </tr>
           <?php }
-          if ($_POST['action']=='enter_data') {
-            echo tep_draw_form('business_unit_entry', tep_href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS), 'post', 'enctype="multipart/form-data"') . tep_create_parameters(array('action'=>'save_data'), array('mPath', 'business_units_id', 'business_units_image'), 'hidden_field');
+          if (HTMLHelper::getPOST('action')=='enter_data') {
+            echo HTMLHelper::draw_form('business_unit_entry', HTMLHelper::href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS), 'post', 'enctype="multipart/form-data"') . HTMLHelper::create_parameters(array('action'=>'save_data'), array('mPath', 'business_units_id', 'business_units_image'), 'hidden_field');
           } ?>
           <tr>
             <td class="item_entry">
               <?php echo TEXT_BUSINESS_UNITS_NAME; ?>
             </td>
             <td class="item_entry" style="width:150px">
-              <?php echo tep_draw_input_field('business_units_name', '', 'size="1" maxlength="64" style="width:100%"' . ($_POST['action']=='enter_data'?'':' disabled')); ?>
+              <?php echo HTMLHelper::draw_input_field('business_units_name', '', 'size="1" maxlength="64" style="width:100%"' . (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled')); ?>
             </td>
             <td class="item_entry">&nbsp;</td>
             <td class="item_entry" style="width:65px">
               <?php echo TEXT_BUSINESS_UNITS_IMAGE; ?>
             </td>
             <td class="item_entry" colspan="3" style="width: 150px">
-              <?php echo (isset($_POST['business_units_image'])?$_POST['business_units_image']:''); ?>
+              <?php echo HTMLHelper::getPOST('business_units_image'); ?>
             </td>
             <td class="item_entry" style="width:65px">&nbsp;</td>
           </tr>
@@ -48,14 +54,14 @@
             <td class="item_entry" colspan="4">&nbsp;</td>
             <td class="item_entry" colspan="4" style="width: 215px">
               <div style="position:relative; z-index:0">
-                <?php echo tep_draw_input_field('business_units_image_upload', '', 'style="position:relative; text-align:right; -moz-opacity:0; filter:alpha(opacity:0); opacity:0" onchange="copyValue(\'business_units_image_displayname\', this.value);"' . ($_POST['action']=='enter_data'?'':' disabled'), 'file'); ?>
+                <?php echo HTMLHelper::draw_input_field('business_units_image_upload', '', 'style="position:relative; text-align:right; -moz-opacity:0; filter:alpha(opacity:0); opacity:0" onchange="copyValue(\'business_units_image_displayname\', this.value);"' . (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled'), 'file'); ?>
                 <div>
-                  <?php echo tep_draw_input_field('business_units_image_displayname', '', 'size="1" style="width:150px; z-index:1; position:absolute; top:0px; left:0px" readonly' . ($_POST['action']=='enter_data'?'':' disabled')) .
-                  tep_image(DIR_WS_IMAGES . '/pixel_f8f8f9.gif', null, '4', '22', 'border="none" style="z-index:1; position:absolute; top:0px; left:150px"');
-                  if ($_POST['action']=='enter_data') {
-                    echo tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/button_browse.gif', null, null, null, 'style="vertical-align:middle; z-index:-1; position:absolute; top:0px; left:154px"');
+                  <?php echo HTMLHelper::draw_input_field('business_units_image_displayname', '', 'size="1" style="width:140px; z-index:1; position:absolute; top:0px; left:0px" readonly' . (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled')) .
+                  HTMLHelper::image(DIR_WS_IMAGES . '/pixel_f8f8f9.gif', null, '4', '22', 'border="none" style="z-index:1; position:absolute; top:0px; left:150px"');
+                  if (HTMLHelper::getPOST('action')=='enter_data') {
+                    echo HTMLHelper::image(DIR_WS_IMAGES_LANG . $_SESSION['language'] . '/buttons/button_browse.gif', null, null, null, 'style="vertical-align:middle; z-index:-1; position:absolute; top:0px; left:154px"');
                   } else {
-                    echo tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/button_browse_disabled.gif', null, null, null, 'style="vertical-align:middle; z-index:-1; position:absolute; top:0px; left:154px"');
+                    echo HTMLHelper::image(DIR_WS_IMAGES_LANG . $_SESSION['language'] . '/buttons/button_browse_disabled.gif', null, null, null, 'style="vertical-align:middle; z-index:-1; position:absolute; top:0px; left:154px"');
                   } ?>
                 </div>
               </div>
@@ -67,13 +73,13 @@
               <?php echo TEXT_BUSINESS_UNITS_IMAGE_POSITION; ?>
             </td>
             <td class="item_entry" style="text-align:left">
-              <?php echo tep_draw_radio_field('business_units_image_position', 'L', false, ($_POST['action']=='enter_data'?'':' disabled')); ?>
+              <?php echo HTMLHelper::draw_radio_field('business_units_image_position', 'L', false, (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled')); ?>
             </td>
             <td class="item_entry" style="text-align:center">
-              <?php echo tep_draw_radio_field('business_units_image_position', 'C', false, ($_POST['action']=='enter_data'?'':' disabled')); ?>
+              <?php echo HTMLHelper::draw_radio_field('business_units_image_position', 'C', false, (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled')); ?>
             </td>
             <td class="item_entry" style="text-align:right">
-              <?php echo tep_draw_radio_field('business_units_image_position', 'R', false, ($_POST['action']=='enter_data'?'':' disabled')); ?>&nbsp;
+              <?php echo HTMLHelper::draw_radio_field('business_units_image_position', 'R', false, (HTMLHelper::getPOST('action')=='enter_data'?'':' disabled')); ?>&nbsp;
             </td>
             <td class="item_entry" style="width:65px">&nbsp;</td>
           </tr>
@@ -86,44 +92,44 @@
           </tr>
           <tr>
             <td class="item_entry" colspan="4">
-              <?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?>
+              <?php echo HTMLHelper::draw_separator('pixel_trans.gif', '100%', '10'); ?>
             </td>
             <td class="item_entry" colspan="3" style="width:150px">
-              <?php echo tep_draw_separator('pixel_trans.gif', '150', '10'); ?>
+              <?php echo HTMLHelper::draw_separator('pixel_trans.gif', '150', '10'); ?>
             </td>
             <td class="item_entry" style="width:65px">
-              <?php echo tep_draw_separator('pixel_trans.gif', '65', '10'); ?>
+              <?php echo HTMLHelper::draw_separator('pixel_trans.gif', '65', '10'); ?>
             </td>
           </tr>
           <tr>
             <td class="item_entry" style="text-align:left">
-              <?php if ($_POST['action']!='enter_data'&&$_POST['action']!='delete_entry') {
-                echo tep_draw_form('fnew', tep_href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . tep_create_parameters(array('action'=>'enter_data', 'business_units_image_position'=>'L'), array('mPath'), 'hidden_field');
-                echo tep_image_submit('button_new.gif', TEXT_ENTRY_NEW, 'style="vertical-align:middle"');
+              <?php if (HTMLHelper::getPOST('action')!='enter_data'&&HTMLHelper::getPOST('action')!='delete_entry') {
+                echo HTMLHelper::draw_form('fnew', HTMLHelper::href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . HTMLHelper::create_parameters(array('action'=>'enter_data', 'business_units_image_position'=>'L'), array('mPath'), 'hidden_field');
+                echo HTMLHelper::image_submit('button_new.gif', TEXT_ENTRY_NEW, 'style="vertical-align:middle"');
                 echo '</form>';
               } else {
-                echo tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/button_new_disabled.gif', null, null, null, 'style="vertical-align:middle"');
+                echo HTMLHelper::image(DIR_WS_IMAGES_LANG . $_SESSION['language'] . '/buttons/button_new_disabled.gif', null, null, null, 'style="vertical-align:middle"');
               } ?>
             </td>
             <td class="item_entry" colspan="7" style="text-align:right">
-              <?php if ($_POST['action']=='enter_data') {
-                echo tep_image_submit('button_save.gif', TEXT_ENTRY_SAVE, 'style="vertical-align:middle"');
+              <?php if (HTMLHelper::getPOST('action')=='enter_data') {
+                echo HTMLHelper::image_submit('button_save.gif', TEXT_ENTRY_SAVE, 'style="vertical-align:middle"');
                 echo '</form>';
-              } else if ($_POST['action']=='delete_entry') {
+              } else if (HTMLHelper::getPOST('action')=='delete_entry') {
                 echo TEXT_ENTRY_DELETE_QUESTION . '&nbsp;';
-                echo tep_draw_form('delete_entry_confirm', tep_href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . tep_create_parameters(array('action'=>'delete_entry_confirmed'), array('mPath', 'business_units_id'), 'hidden_field');
-                echo tep_image_submit('button_ok.gif', TEXT_ENTRY_DELETE_OK, 'style="vertical-align:middle"');
+                echo HTMLHelper::draw_form('delete_entry_confirm', HTMLHelper::href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . HTMLHelper::create_parameters(array('action'=>'delete_entry_confirmed'), array('mPath', 'business_units_id'), 'hidden_field');
+                echo HTMLHelper::image_submit('button_ok.gif', TEXT_ENTRY_DELETE_OK, 'style="vertical-align:middle"');
                 echo '</form>';
               } else {
-                echo tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/button_save_disabled.gif', null, null, null, 'style="vertical-align:middle"');
+                echo HTMLHelper::image(DIR_WS_IMAGES_LANG . $_SESSION['language'] . '/buttons/button_save_disabled.gif', null, null, null, 'style="vertical-align:middle"');
               }
               echo '&nbsp;';
-              if ($_POST['action']=='enter_data'||$_POST['action']=='delete_entry') {
-                echo tep_draw_form('fcancel', tep_href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . tep_create_parameters(array(), array('mPath'), 'hidden_field');
-                echo tep_image_submit('button_cancel.gif', TEXT_ENTRY_CANCEL, 'style="vertical-align:middle"');
+              if (HTMLHelper::getPOST('action')=='enter_data'||HTMLHelper::getPOST('action')=='delete_entry') {
+                echo HTMLHelper::draw_form('fcancel', HTMLHelper::href_link(FILENAME_ADMINISTRATION_BUSINESS_UNITS)) . HTMLHelper::create_parameters(array(), array('mPath'), 'hidden_field');
+                echo HTMLHelper::image_submit('button_cancel.gif', TEXT_ENTRY_CANCEL, 'style="vertical-align:middle"');
                 echo '</form>';
               } else {
-                echo tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/button_cancel_disabled.gif', null, null, null, 'style="vertical-align:middle"');
+                echo HTMLHelper::image(DIR_WS_IMAGES_LANG . $_SESSION['language'] . '/buttons/button_cancel_disabled.gif', null, null, null, 'style="vertical-align:middle"');
               } ?>
             </td>
           </tr>

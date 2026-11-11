@@ -10,6 +10,8 @@
  *               http://www.oscommerce.com
  */
 
+use BitTS\Support\GeneralHelper;
+
   class language {
     public $languages, $catalog_languages, $browser_languages, $language;
 
@@ -69,7 +71,7 @@
     }
 
     function set_language($language) {
-      if ( (tep_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
+      if ( (!GeneralHelper::is_null($language)) && (isset($this->catalog_languages[$language])) ) {
         $this->language = $this->catalog_languages[$language];
       } else {
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];

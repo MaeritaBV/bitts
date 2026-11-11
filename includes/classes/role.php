@@ -6,6 +6,19 @@
  * Date        : 20 june 2009
  * Description : Role class
  */
+/**
+ * role.php
+ *
+ * Role class file
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 08 november 2026
+ */
+
+use BitTS\Support\GeneralHelper;
 
   class role {
     private $id, $name, $description, $mandatory_ticket_entry, $projects_id, $category, $employees_roles, $listing;
@@ -29,7 +42,7 @@
                     $roles_result['categories_id']);
 
         // Retrieve specific employee_role or all employees_roles for this employee_role
-        if (tep_not_null($child_or_projects_id)) {
+        if (!GeneralHelper::is_null($child_or_projects_id)) {
           if (is_object($child_or_projects_id)) {
             $this->employees_roles[0] = $child_or_projects_id;
           }
@@ -85,7 +98,7 @@
         $index = 0;
         $roles_query = $database->query("select roles_id from " . TABLE_ROLES . $selection_criterium . " order by roles_name");
         while ($roles_result = $database->fetch_array($roles_query)) {
-          $roles_array[$index] = new role($roles_result['roles_id'], 'dummy');
+          $roles_array[$index] = new role($roles_result['roles_id'], -1); // ex 'dummy'
           $index++;
         }
       } // Temporarily added for speed purposes
@@ -117,7 +130,7 @@
       $this->id = $database->prepare_input($this->id);
       $employees_roles_query = $database->query("select 1 from " . TABLE_EMPLOYEES_ROLES . " where roles_id = '" . (int)$this->id . "'");
       $employees_roles_result = $database->fetch_array($employees_roles_query);
-      return tep_not_null($employees_roles_result);
+      return !GeneralHelper::is_null($employees_roles_result);
     }
 
     public static function get_selected_tree($tariffs_id = '') {
@@ -126,11 +139,11 @@
       return $role;
     }
 
-    public static function get_selectable_roles($employees_id = 0, $date = '0000-00-00', $projects_id = 0) {
+    public static function get_selectable_roles($employees_id = 0, $date = '0000-01-01', $projects_id = 0) {
       $roles_array = array();
       $employees_roles_array = employee_role::get_selectable_employees_roles($employees_id, $date);
       // Receive array of available employees_roles
-      if (tep_not_null($employees_roles_array)) {
+      if (!GeneralHelper::is_null($employees_roles_array)) {
         $database = $_SESSION['database'];
         $roles_query = 'select roles_id, roles_name, roles_description, roles_mandatory_ticket_entry, projects_id from ' . TABLE_ROLES . ' where roles_id in (';
         // Walk through the array
@@ -159,10 +172,10 @@
       $database = $_SESSION['database'];
       $roles_listing = '';
 
-      if (tep_not_null($parents_id)) {
+      if (!GeneralHelper::is_null($parents_id)) {
         $roles_query = $database->query("select roles_id from " . TABLE_ROLES . " where projects_id in (" . $parents_id . ")");
         while ($roles_result = $database->fetch_array($roles_query)) {
-          if (tep_not_null($roles_listing)) {
+          if (!GeneralHelper::is_null($roles_listing)) {
             $roles_listing .= ',';
           }
           $roles_listing .= ''.$roles_result['roles_id'];
@@ -177,10 +190,10 @@
       $database = $_SESSION['database'];
       $roles_listing = '';
 
-      if (tep_not_null($parents_id)) {
+      if (!GeneralHelper::is_null($parents_id)) {
         $roles_query = $database->query("select roles_id from " . TABLE_ROLES . " where projects_id in (" . $parents_id . ")");
         while ($roles_result = $database->fetch_array($roles_query)) {
-          if (tep_not_null($roles_listing)) {
+          if (!GeneralHelper::is_null($roles_listing)) {
             $roles_listing .= ',';
           }
           $roles_listing .= ''.$roles_result['roles_id'];
@@ -195,10 +208,10 @@
       $database = $_SESSION['database'];
       $roles_listing = '';
 
-      if (tep_not_null($parents_id)) {
+      if (!GeneralHelper::is_null($parents_id)) {
         $roles_query = $database->query("select roles_id from " . TABLE_ROLES . " where projects_id in (" . $parents_id . ")");
         while ($roles_result = $database->fetch_array($roles_query)) {
-          if (tep_not_null($roles_listing)) {
+          if (!GeneralHelper::is_null($roles_listing)) {
             $roles_listing .= ',';
           }
           $roles_listing .= ''.$roles_result['roles_id'];
@@ -237,4 +250,3 @@
       return ($role_result['roles_mandatory_ticket_entry'] == 1);
     }
   }
-?>

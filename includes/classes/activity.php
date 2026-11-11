@@ -3,10 +3,13 @@
  * CLASS FILE  : activity.php
  * Project     : BitTS - BART it TimeSheet
  * Author(s)   : Erwin Beukhof
- * Date        : 23 april 2013
+ * Date        : 30 october 2026
  * Description : Activity class
  *
  */
+
+use BitTS\Support\DateTimeHelper;
+use BitTS\Support\GeneralHelper;
 
   class activity {
     private $activity_id, $date, $amount, $tariff, $travel_distance, $travel_description, $expenses, $ticket_number, $comment, $timesheet_id;
@@ -31,9 +34,9 @@
                                            "WHERE activities_id = '" . (int)$this->activity_id . "';");
         $activity_result = $database->fetch_array($activity_query);
 
-        if (tep_not_null($activity_result)) {
+        if (!GeneralHelper::is_null($activity_result)) {
           // Activity exists
-          $this->fill(tep_datetouts('%Y-%m-%d', $activity_result['activities_date']),
+          $this->fill(DateTimeHelper::dateToUTS('yyyy-MM-dd', $activity_result['activities_date']),
                       $activity_result['activities_amount'],
                       $activity_result['tariffs_id'],
                       $activity_result['activities_travel_distance'],
@@ -86,7 +89,7 @@
       $database = $_SESSION['database'];
       $activity_array = array();
 
-      if (tep_not_null($timesheet_id)) {
+      if (!GeneralHelper::is_null($timesheet_id)) {
         $index = 0;
         $timesheet_id = $database->prepare_input($timesheet_id);
         $activities_query = $database->query("SELECT activities_id FROM " . TABLE_ACTIVITIES . " a " .
@@ -119,11 +122,11 @@
       $database = $_SESSION['database'];
       $activities_array = array();
 
-      if (tep_not_null($parents_id)) {
+      if (!GeneralHelper::is_null($parents_id)) {
         $index = 0;
         $activities_query = $database->query("SELECT activities_id " .
                                              "FROM " . TABLE_ACTIVITIES . " " .
-                                             "WHERE tariffs_id IN (" . $parents_id . ") AND " . $column_name1 . " " . $comparison1 . " '" . $value1 . "'" . (tep_not_null($delimiter)?' ' . $delimiter . " " . $column_name2 . " " . $comparison2 . " '" . $value2 . "'":'') . ";");
+                                             "WHERE tariffs_id IN (" . $parents_id . ") AND " . $column_name1 . " " . $comparison1 . " '" . $value1 . "'" . (!GeneralHelper::is_null($delimiter)?' ' . $delimiter . " " . $column_name2 . " " . $comparison2 . " '" . $value2 . "'":'') . ";");
         while ($activities_result = $database->fetch_array($activities_query)) {
           $activities_array[$index] = new activity($activities_result['activities_id']);
           $index++;
@@ -199,11 +202,11 @@
       // Insert a new activity if one does not exist and retrieve the id
       if ($this->activity_id == 0) {
         // The activity does not exist
-        $database->query("INSERT INTO " . TABLE_ACTIVITIES . " (activities_date, activities_amount, tariffs_id, activities_travel_distance, activities_travel_description, activities_expenses, activities_ticket_number, activities_comment, timesheets_id) values ('" . tep_strftime(DATE_FORMAT_DATABASE, $this->date) . "', '" . $this->amount . "', '" . $this->tariff->id . "', '" . $this->travel_distance . "', '" . $database->input($this->travel_description) . "', '" . $this->expenses . "', '" . $this->ticket_number . "', '" . $database->input($this->comment) . "', '" . $this->timesheet_id . "');");
+        $database->query("INSERT INTO " . TABLE_ACTIVITIES . " (activities_date, activities_amount, tariffs_id, activities_travel_distance, activities_travel_description, activities_expenses, activities_ticket_number, activities_comment, timesheets_id) values ('" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->date) . "', '" . $this->amount . "', '" . $this->tariff->id . "', '" . $this->travel_distance . "', '" . $database->input($this->travel_description) . "', '" . $this->expenses . "', '" . $this->ticket_number . "', '" . $database->input($this->comment) . "', '" . $this->timesheet_id . "');");
         $this->activity_id = $database->insert_id(); // The proper id is now known
       } else {
         // The activity exists, update the contents
-        $activity_query = $database->query("UPDATE " . TABLE_ACTIVITIES . " SET activities_date='" . tep_strftime(DATE_FORMAT_DATABASE, $this->date) . "', activities_amount='" . $this->amount . "', tariffs_id='" . $this->tariff->id . "', activities_travel_distance='" . $this->travel_distance . "', activities_travel_description='" . $database->input($this->travel_description) . "', activities_expenses='" . $this->expenses . "', activities_ticket_number='" . $this->ticket_number . "', activities_comment='" . $database->input($this->comment) . "' where activities_id = '" . (int)$this->activity_id . "';");
+        $activity_query = $database->query("UPDATE " . TABLE_ACTIVITIES . " SET activities_date='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->date) . "', activities_amount='" . $this->amount . "', tariffs_id='" . $this->tariff->id . "', activities_travel_distance='" . $this->travel_distance . "', activities_travel_description='" . $database->input($this->travel_description) . "', activities_expenses='" . $this->expenses . "', activities_ticket_number='" . $this->ticket_number . "', activities_comment='" . $database->input($this->comment) . "' where activities_id = '" . (int)$this->activity_id . "';");
       }
     }
 
@@ -215,7 +218,7 @@
     }
 
     public static function get_former_activity_id($employee_id, $selected_date = null) {
-      $db_date = tep_strftime(DATE_FORMAT_DATABASE, $selected_date);
+      $db_date = DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $selected_date);
       $database = $_SESSION['database'];
 
       $activity_query = $database->query("SELECT a.activities_id, " .
@@ -228,7 +231,7 @@
                                          "ORDER BY a.activities_date DESC, a.activities_id DESC;");
       $activity_result = $database->fetch_array($activity_query);
 
-      if (tep_not_null($activity_result)) {
+      if (!GeneralHelper::is_null($activity_result)) {
         // There is a resultset, keep the activity_id for now and
         // check if the activity is valid for the given employee and date
         $former_activity_id = $activity_result['activities_id'];
@@ -255,7 +258,7 @@
                                              "AND t.tariffs_start_date <= '" . $db_date . "' " .
                                              "AND t.tariffs_end_date >= '" . $db_date . "';");
         $activity_result = $database->fetch_array($activity_query);
-        if (tep_not_null($activity_result)) {
+        if (!GeneralHelper::is_null($activity_result)) {
           // Activity is valid for given employee and date
           return $former_activity_id;
         } else {

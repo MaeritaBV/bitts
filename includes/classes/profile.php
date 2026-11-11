@@ -8,6 +8,8 @@
  *
  */
 
+use BitTS\Support\GeneralHelper;
+
   class profile {
     private $id, $name, $right, $listing;
 
@@ -23,7 +25,7 @@
         $profiles_query = $database->query("select profiles_name, profiles_rights_login, profiles_rights_projectlisting, profiles_rights_timeregistration, profiles_rights_analysis, profiles_rights_administration from " . TABLE_PROFILES . " where profiles_id = '" . (int)$id . "'");
         $profiles_result = $database->fetch_array($profiles_query);
 
-        if (tep_not_null($profiles_result)) {
+        if (!GeneralHelper::is_null($profiles_result)) {
           // Profile exists
           $this->fill($profiles_result['profiles_name'],
                       $profiles_result['profiles_rights_login']==1,
@@ -114,7 +116,7 @@
         $this->id = $database->prepare_input($this->id);
         $employees_query = $database->query("select 1 from " . TABLE_EMPLOYEES . " where profiles_id = '" . (int)$this->id . "'");
         $employees_result = $database->fetch_array($employees_query);
-        return tep_not_null($employees_result);
+        return !GeneralHelper::is_null($employees_result);
       }
     }
   }

@@ -1,11 +1,18 @@
 <?php
-/****************************************************************************
- * CLASS FILE  : project.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 19 july 2011
- * Description : Project class
+/**
+ * project.php
+ *
+ * Project class
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 09 november 2026
  */
+
+use BitTS\Support\DateTimeHelper;
+use BitTS\Support\GeneralHelper;
 
   class project {
     private $id, $business_unit, $customer, $name, $description, $customers_contact_name, $customers_reference, $start_date, $end_date, $calculated_hours, $calculated_hours_period, $roles, $listing;
@@ -22,20 +29,20 @@
         $projects_query = $database->query("SELECT projects_name, projects_description, projects_customers_contact_name, projects_customers_reference, projects_start_date, projects_end_date, projects_calculated_hours, projects_calculated_hours_period, business_units_id, customers_id FROM " . TABLE_PROJECTS . " WHERE projects_id = '" . (int)$id . "';");
         $projects_result = $database->fetch_array($projects_query);
 
-        if (tep_not_null($projects_result)) {
+        if (!GeneralHelper::is_null($projects_result)) {
           // Project exists
           $this->fill($projects_result['projects_name'],
                       $projects_result['projects_description'],
                       $projects_result['projects_customers_contact_name'],
                       $projects_result['projects_customers_reference'],
-                      tep_datetouts(DATE_FORMAT_DATABASE, $projects_result['projects_start_date']),
-                      ($projects_result['projects_end_date']!='2099-12-31'?tep_datetouts(DATE_FORMAT_DATABASE, $projects_result['projects_end_date']):0),
+                      DateTimeHelper::dateToUTS(DATE_FORMAT_DATABASE, $projects_result['projects_start_date']),
+                      ($projects_result['projects_end_date']!='2099-12-31'?DateTimeHelper::dateToUTS(DATE_FORMAT_DATABASE, $projects_result['projects_end_date']):0),
                       $projects_result['projects_calculated_hours'],
                       $projects_result['projects_calculated_hours_period'],
                       $projects_result['business_units_id'],
                       $projects_result['customers_id']);
           // Retrieve specific role or all available roles for this project
-          if (tep_not_null($role_object)) {
+          if (!GeneralHelper::is_null($role_object)) {
             if (is_object($role_object)) {
               $this->roles[sizeof($this->roles)] = $role_object;
             }
@@ -109,7 +116,7 @@
       $projects_sql .= "ORDER BY projects_name;";
       $projects_query = $database->query($projects_sql);
       while ($projects_result = $database->fetch_array($projects_query)) {
-        $projects_array[$index] = new project($projects_result['projects_id'], 'dummy');
+        $projects_array[$index] = new project($projects_result['projects_id'], -1); // ex 'dummy'
         $index++;
       }
 
@@ -121,11 +128,11 @@
       // Insert a new project if one does not exist and retrieve the id
       if ($this->id == 0) {
         // The project does not exist
-        $database->query("insert into " . TABLE_PROJECTS . " (projects_name, projects_description, projects_customers_contact_name, projects_customers_reference, projects_start_date, projects_end_date, projects_calculated_hours, projects_calculated_hours_period, business_units_id, customers_id) values ('" . $this->name . "', '" . $this->description . "', '" . $this->customers_contact_name . "', '" . $this->customers_reference . "', '" . tep_strftime(DATE_FORMAT_DATABASE, $this->start_date) . "', '" . ($this->end_date!=0?tep_strftime(DATE_FORMAT_DATABASE, $this->end_date):'2099-12-31') . "', '" . intval($this->calculated_hours) . "', '" . $this->calculated_hours_period . "', '" . $this->business_unit->id . "', '" . $this->customer->id . "')");
+        $database->query("insert into " . TABLE_PROJECTS . " (projects_name, projects_description, projects_customers_contact_name, projects_customers_reference, projects_start_date, projects_end_date, projects_calculated_hours, projects_calculated_hours_period, business_units_id, customers_id) values ('" . $this->name . "', '" . $this->description . "', '" . $this->customers_contact_name . "', '" . $this->customers_reference . "', '" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->start_date) . "', '" . ($this->end_date!=0?DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->end_date):'2099-12-31') . "', '" . intval($this->calculated_hours) . "', '" . $this->calculated_hours_period . "', '" . $this->business_unit->id . "', '" . $this->customer->id . "')");
         $this->id = $database->insert_id(); // The proper id is now known
       } else {
         // The project exists, update the contents
-        $units_query = $database->query("update " . TABLE_PROJECTS . " set projects_name='" . $this->name . "', projects_description='" . $this->description . "', projects_customers_contact_name='" . $this->customers_contact_name . "', projects_customers_reference='" . $this->customers_reference . "', projects_start_date='" . tep_strftime(DATE_FORMAT_DATABASE, $this->start_date) . "', projects_end_date='" . ($this->end_date!=0?tep_strftime(DATE_FORMAT_DATABASE, $this->end_date):'2099-12-31') . "', projects_calculated_hours='" . intval($this->calculated_hours) . "', projects_calculated_hours_period='" . $this->calculated_hours_period . "', business_units_id='" . $this->business_unit->id . "', customers_id='" . $this->customer->id . "' where projects_id = '" . (int)$this->id . "'");
+        $units_query = $database->query("update " . TABLE_PROJECTS . " set projects_name='" . $this->name . "', projects_description='" . $this->description . "', projects_customers_contact_name='" . $this->customers_contact_name . "', projects_customers_reference='" . $this->customers_reference . "', projects_start_date='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->start_date) . "', projects_end_date='" . ($this->end_date!=0?DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $this->end_date):'2099-12-31') . "', projects_calculated_hours='" . intval($this->calculated_hours) . "', projects_calculated_hours_period='" . $this->calculated_hours_period . "', business_units_id='" . $this->business_unit->id . "', customers_id='" . $this->customer->id . "' where projects_id = '" . (int)$this->id . "'");
       }
     }
 
@@ -141,7 +148,7 @@
       $this->id = $database->prepare_input($this->id);
       $roles_query = $database->query("select 1 from " . TABLE_ROLES . " where projects_id = '" . (int)$this->id . "'");
       $roles_result = $database->fetch_array($roles_query);
-      return tep_not_null($roles_result);
+      return !GeneralHelper::is_null($roles_result);
     }
 
     public function validate_hours($value) {
@@ -184,11 +191,11 @@
       return $project;
     }
 
-    public static function get_selectable_projects($employee_id = 0, $date = '0000-00-00') {
+    public static function get_selectable_projects($employee_id = 0, $date = '0000-01-01') {
       $project_array = array();
       $role_array = role::get_selectable_roles($employee_id, $date);
       // Receive array of available roles
-      if (tep_not_null($role_array)) {
+      if (!GeneralHelper::is_null($role_array)) {
         $database = $_SESSION['database'];
         $project_query = 'select projects_id, projects_name, projects_description, projects_customers_contact_name, projects_customers_reference, projects_start_date, projects_end_date, projects_calculated_hours, customers_id from ' . TABLE_PROJECTS . ' where projects_id in (';
         // Walk through the array
@@ -230,12 +237,12 @@
             "AND " . TABLE_ACTIVITIES . ".tariffs_id=" . TABLE_TARIFFS . ".tariffs_id " .
             "AND " . TABLE_TARIFFS . ".employees_roles_id=" . TABLE_EMPLOYEES_ROLES . ".employees_roles_id " .
             "AND " . TABLE_EMPLOYEES_ROLES . ".roles_id=" . TABLE_ROLES . ".roles_id) " .
-          "WHERE " . TABLE_TIMESHEETS . ".timesheets_start_date<='" . tep_strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
-            "AND " . TABLE_TIMESHEETS . ".timesheets_end_date>='" . tep_strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
+          "WHERE " . TABLE_TIMESHEETS . ".timesheets_start_date<='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
+            "AND " . TABLE_TIMESHEETS . ".timesheets_end_date>='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
             "AND " . TABLE_ROLES . ".projects_id=" . TABLE_PROJECTS . ".projects_id) AS projects_calculated_hours_used " .
         "FROM " . TABLE_PROJECTS . " " .
-        "WHERE projects_start_date<='" . tep_strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
-          "AND projects_end_date>='" . tep_strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
+        "WHERE projects_start_date<='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
+          "AND projects_end_date>='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
           "AND (projects_calculated_hours=0 " .
           "OR (projects_calculated_hours>0 " .
           "AND projects_calculated_hours_period='B')) " .
@@ -249,8 +256,8 @@
             "AND " . TABLE_EMPLOYEES_ROLES . ".roles_id=" . TABLE_ROLES . ".roles_id) " .
           "WHERE " . TABLE_ROLES . ".projects_id=" . TABLE_PROJECTS . ".projects_id) " .
         "FROM " . TABLE_PROJECTS . " " .
-        "WHERE projects_start_date<='" . tep_strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
-          "AND projects_end_date>='" . tep_strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
+        "WHERE projects_start_date<='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_end_date) . "' " .
+          "AND projects_end_date>='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $period_start_date) . "' " .
           "AND projects_calculated_hours>0 " .
           "AND projects_calculated_hours_period='E' " .
         "ORDER BY ((projects_calculated_hours_used*projects_calculated_hours)/((projects_calculated_hours*projects_calculated_hours)+0.001)) DESC,projects_name ASC");
@@ -270,8 +277,8 @@
             "AND " . TABLE_ACTIVITIES . ".tariffs_id=" . TABLE_TARIFFS . ".tariffs_id " .
             "AND " . TABLE_TARIFFS . ".employees_roles_id=" . TABLE_EMPLOYEES_ROLES . ".employees_roles_id " .
             "AND " . TABLE_EMPLOYEES_ROLES . ".roles_id=" . TABLE_ROLES . ".roles_id) " .
-          "WHERE " . TABLE_TIMESHEETS . ".timesheets_start_date<='" . tep_strftime(DATE_FORMAT_DATABASE, $selected_date) . "' " .
-            "AND " . TABLE_TIMESHEETS . ".timesheets_end_date>='" . tep_strftime(DATE_FORMAT_DATABASE, $selected_date) . "' " .
+          "WHERE " . TABLE_TIMESHEETS . ".timesheets_start_date<='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $selected_date) . "' " .
+            "AND " . TABLE_TIMESHEETS . ".timesheets_end_date>='" . DateTimeHelper::strftime(DATE_FORMAT_DATABASE, $selected_date) . "' " .
             "AND " . TABLE_ROLES . ".projects_id=" . TABLE_PROJECTS . ".projects_id) AS projects_calculated_hours_used " .
         "FROM " . TABLE_PROJECTS . " " .
         "WHERE projects_id=" . $projects_id . " " .
@@ -292,11 +299,10 @@
           "AND projects_calculated_hours>0 " .
           "AND projects_calculated_hours_period='E' ");
       $project_result = $database->fetch_array($project_query);
-      if (tep_not_null($project_result) && ($project_result['projects_calculated_hours']==0 || (round($project_result['projects_calculated_hours']-$project_result['projects_calculated_hours_used']-$activity_amount,2)>=0))) {
+      if (!GeneralHelper::is_null($project_result) && ($project_result['projects_calculated_hours']==0 || (round($project_result['projects_calculated_hours']-$project_result['projects_calculated_hours_used']-$activity_amount,2)>=0))) {
         return true;
       } else {
         return false;
       }
     }
   }
-?>

@@ -1,14 +1,20 @@
 <?php
-/****************************************************************************
- * CLASS FILE  : category.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 17 june 2009
- * Description : Category class file
+/**
+ * category.php
+ *
+ * Category class file
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 08 november 2026
  */
 
-  class category {
-    private $id, $name, $listing;
+use BitTS\Support\GeneralHelper;
+
+class category {
+  private $id, $name, $listing;
 
     public function __construct($id = 0) {
       $database = $_SESSION['database'];
@@ -21,7 +27,7 @@
         $categories_query = $database->query("select categories_name from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$id . "'");
         $categories_result = $database->fetch_array($categories_query);
 
-        if (tep_not_null($categories_result)) {
+        if (!GeneralHelper::is_null($categories_result)) {
           // Category exists
           $this->fill($categories_result['categories_name']);
         }
@@ -88,7 +94,7 @@
       $this->id = $database->prepare_input($this->id);
       $roles_query = $database->query("select 1 from " . TABLE_ROLES . " where categories_id = '" . (int)$this->id . "'");
       $roles_result = $database->fetch_array($roles_query);
-      return tep_not_null($roles_result);
+      return !GeneralHelper::is_null($roles_result);
     }
   }
 ?>

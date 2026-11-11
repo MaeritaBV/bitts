@@ -1,11 +1,17 @@
 <?php
-/****************************************************************************
- * CLASS FILE  : business_unit.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 19 june 2009
- * Description : Business Unit class file
+/**
+ * business_unit.php
+ *
+ * Business Unit class file
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 10 november 2026
  */
+
+use BitTS\Support\GeneralHelper;
 
   class business_unit {
     private $id, $name, $image, $image_position, $listing;
@@ -21,7 +27,7 @@
         $business_units_query = $database->query("select business_units_name, business_units_image, business_units_image_position from " . TABLE_BUSINESS_UNITS . " where business_units_id = '" . (int)$id . "'");
         $business_units_result = $database->fetch_array($business_units_query);
 
-        if (tep_not_null($business_units_result)) {
+        if (!GeneralHelper::is_null($business_units_result)) {
           // Business Unit exists
           $this->fill($business_units_result['business_units_name'],
                       $business_units_result['business_units_image'],
@@ -96,7 +102,6 @@
       $this->id = $database->prepare_input($this->id);
       $projects_query = $database->query("select 1 from " . TABLE_PROJECTS . " where business_units_id = '" . (int)$this->id . "'");
       $projects_result = $database->fetch_array($projects_query);
-      return tep_not_null($projects_result);
+      return !GeneralHelper::is_null($projects_result);
     }
   }
-?>

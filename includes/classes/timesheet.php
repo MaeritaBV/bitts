@@ -3,10 +3,13 @@
  * CLASS FILE  : timesheet.php
  * Project     : BitTS - BART it TimeSheet
  * Author(s)   : Erwin Beukhof
- * Date        : 22 october 2026
+ * Date        : 08 november 2026
  * Description : Timesheet class
  *
  */
+
+use BitTS\Support\DateTimeHelper;
+use BitTS\Support\GeneralHelper;
 
   class timesheet {
     private $id, $start_date, $end_date, $locked, $employees_id, $activities, $former_activity, $listing;
@@ -21,35 +24,34 @@
         // Retrieve timesheet by id
         $this->id = $database->prepare_input($this->id);
         $timesheet_query = $database->query("select timesheets_id, timesheets_start_date, timesheets_end_date, timesheets_locked, employees_id from " . TABLE_TIMESHEETS . " where timesheets_id = '" . (int)$this->id . "'");
-      } else if ($employees_id != 0 && tep_not_null($period)) {
+      } else if ($employees_id != 0 && !GeneralHelper::is_null($period)) {
         // Timesheet might exist but we do not know the id
       	// Try to retrieve the timesheet for the given employee and period
         $this->employees_id = $database->prepare_input($employees_id);
-      	$this->start_date = $database->prepare_input(tep_periodstartdate($period));
+      	$this->start_date = $database->prepare_input(DateTimeHelper::getPeriodStartDate($period));
         $timesheet_query = $database->query("select timesheets_id, timesheets_start_date, timesheets_end_date, timesheets_locked, employees_id from " . TABLE_TIMESHEETS . " where employees_id = '" . (int)$this->employees_id . "' and timesheets_start_date = '" . $this->start_date . "'");
       } else {
         // We probably created an empty timesheet object to retrieve the entire timesheet listing for a given employee
         $this->listing = $this->get_array($employees_id, $sort_order); // When timesheets_id == 0, $sort_order determines the timesheet listing
       }
 
-      if (($this->id != 0) || ($employees_id != 0 && tep_not_null($period))) {
+      if (($this->id != 0) || ($employees_id != 0 && !GeneralHelper::is_null($period))) {
         $timesheet_result = $database->fetch_array($timesheet_query);
 
-        if (tep_not_null($timesheet_result)) {
+        if (!GeneralHelper::is_null($timesheet_result)) {
           // Timesheet exists
           $this->id = $timesheet_result['timesheets_id'];
-      	  $this->fill($timesheet_result['timesheets_start_date'],
+          $this->fill($timesheet_result['timesheets_start_date'],
                       $timesheet_result['timesheets_end_date'],
                       ($timesheet_result['timesheets_locked'] == 1),
                       $timesheet_result['employees_id']);
-
           // Retrieve all activities for this timesheet (if any exist)
           if ($include_activities) {
             $this->activities = activity::get_array($this->id, $sort_order); // When timesheets_id != 0 / employees_id and period are set, $sort_order determines the activity listing
           }
         } else {
           // Timesheet does not exist, fill a new one with the given values
-      	  $this->fill(tep_periodstartdate($period), tep_periodenddate($period), false, $employees_id);
+      	  $this->fill(DateTimeHelper::getPeriodStartDate($period), DateTimeHelper::getPeriodEndDate($period), false, $employees_id);
         }
       }
     }
@@ -59,7 +61,7 @@
         case 'id':
           return $this->id;
       	case 'period':
-          return tep_datetoperiod(DATE_FORMAT_DATABASE, $this->start_date);
+          return DateTimeHelper::dateToPeriod(DATE_FORMAT_DATABASE, $this->start_date);
         case 'start_date':
           return $this->start_date;
         case 'end_date':
@@ -114,7 +116,7 @@
       return $timesheets_array;
     }
 
-    public function fill($start_date = '0000-00-00 00:00:00', $end_date = '0000-00-00 00:00:00', $locked = false, $employees_id = 0) {
+    public function fill($start_date = '0000-01-01 00:00:00', $end_date = '0000-01-01 00:00:00', $locked = false, $employees_id = 0) {
       $this->start_date = $start_date;
       $this->end_date = $end_date;
       $this->locked = $locked;
@@ -166,13 +168,13 @@
     public function get_total_amount_per_day() {
       $total_amount_per_day = array();
       // Fill the array with zero-hours
-      $last_day_of_the_month = (int)tep_strftime('dd', tep_datetouts('yyyy-MM-dd', $this->end_date));
+      $last_day_of_the_month = (int)DateTimeHelper::strftime('dd', DateTimeHelper::dateToUTS('yyyy-MM-dd', $this->end_date));
       for ($day_index = 1; $day_index <= $last_day_of_the_month; $day_index++) {
         $total_amount_per_day[$day_index] = 0.00;
       }
       // Walk through the activities
       for ($activity_index = 0; $activity_index < sizeof($this->activities); $activity_index++) {
-        $total_amount_per_day[(int)tep_strftime('dd', $this->activities[$activity_index]->date)] += $this->activities[$activity_index]->amount;
+        $total_amount_per_day[(int)DateTimeHelper::strftime('dd', $this->activities[$activity_index]->date)] += $this->activities[$activity_index]->amount;
       }
       return $total_amount_per_day;
     }
@@ -182,18 +184,18 @@
       $oldest_unconfirmed_period_query = $database->query("select timesheets_start_date from " . TABLE_TIMESHEETS .
                                                           " where employees_id = '" . (int)$this->employees_id . "'" .
                                                           " and timesheets_locked = '0'" .
-                                                          " and timesheets_end_date < '" . tep_strftime('yyyy-MM-dd') . "'" .
+                                                          " and timesheets_end_date < '" . DateTimeHelper::strftime('yyyy-MM-dd') . "'" .
                                                           " order by timesheets_start_date");
       $oldest_unconfirmed_period_result = $database->fetch_array($oldest_unconfirmed_period_query);
-      if (tep_not_null($oldest_unconfirmed_period_result)) {
-        return tep_datetoperiod(DATE_FORMAT_DATABASE, $oldest_unconfirmed_period_result['timesheets_start_date']);
+      if (!GeneralHelper::is_null($oldest_unconfirmed_period_result)) {
+        return DateTimeHelper::dateToPeriod(DATE_FORMAT_DATABASE, $oldest_unconfirmed_period_result['timesheets_start_date']);
       } else {
         return null;
       }
     }
 
     public function get_former_activity_id($employees_id, $selected_date = null) {
-      if (!tep_not_null($selected_date)) {
+      if (GeneralHelper::is_null($selected_date)) {
         $selected_date = time();
       }
       $former_activity_id = activity::get_former_activity_id($employees_id, $selected_date);

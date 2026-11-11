@@ -3,7 +3,7 @@
  * CLASS FILE  : database.php
  * Project     : BitTS - BART it TimeSheet
  * Author(s)   : Erwin Beukhof
- * Date        : 16 april 2013
+ * Date        : 29 october 2026
  * Description : Database related functions and selection of proper database
  *               type.
  * 
@@ -11,11 +11,13 @@
  *               http://www.oscommerce.com
  */
 
-  // Require the proper implementation file
-  require(DIR_WS_CLASSES . 'database_' . DB_SERVER_TYPE . '.php');
+// Require the proper implementation file
+require(DIR_WS_CLASSES . 'database_' . DB_SERVER_TYPE . '.php');
 
-  class database {
-  	private $real_database;
+use BitTS\Support\GeneralHelper;
+
+class database {
+	private $real_database;
 
   	public function __construct() {
   	  // Select to which type of db to connect to
@@ -36,8 +38,8 @@
   	public function __destruct() {
   	}
 
-  	public function connect($db_server = DB_SERVER_NAME, $db_server_username = DB_SERVER_USERNAME, $db_server_password = DB_SERVER_PASSWORD, $db_database = DB_DATABASE_NAME) {
-      $this->real_database->connect($db_server, $db_server_username, $db_server_password);
+  	public function connect($db_server = DB_SERVER_NAME, $db_server_username = DB_SERVER_USERNAME, $db_server_password = DB_SERVER_PASSWORD, $db_database = DB_DATABASE_NAME, $db_server_port = DB_SERVER_PORT) {
+      $this->real_database->connect($db_server, $db_server_username, $db_server_password, null, $db_server_port);
 
       if ($this->real_database->get_link()) {
       	$this->real_database->select_db($db_database);
@@ -148,7 +150,7 @@
 
     public function prepare_input($string) {
       if (is_string($string)) {
-        return trim(tep_sanitize_string(stripslashes($string)));
+        return trim(GeneralHelper::sanitize_string(stripslashes($string)));
       } elseif (is_array($string)) {
         reset($string);
         while (list($key, $value) = each($string)) {

@@ -1,27 +1,33 @@
 <?php
-/****************************************************************************
- * CLASS FILE  : unit.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 17 june 2009
- * Description : Unit class file
+/**
+ * unit.php
+ *
+ * Unit class file
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 08 november 2026
  */
 
-  class unit {
-    private $id, $name, $description, $listing;
+use BitTS\Support\GeneralHelper;
 
-    public function __construct($id = 0) {
-      $database = $_SESSION['database'];
-      $this->id = $id;
-      $this->listing = array();
+class unit {
+  private $id, $name, $description, $listing;
 
-      if ($id != 0) {
-        $id = $database->prepare_input($id);
+  public function __construct($id = 0) {
+    $database = $_SESSION['database'];
+    $this->id = $id;
+    $this->listing = array();
 
-        $units_query = $database->query("select units_name, units_description from " . TABLE_UNITS . " where units_id = '" . (int)$id . "'");
-        $units_result = $database->fetch_array($units_query);
+    if ($id != 0) {
+      $id = $database->prepare_input($id);
 
-        if (tep_not_null($units_result)) {
+      $units_query = $database->query("select units_name, units_description from " . TABLE_UNITS . " where units_id = '" . (int)$id . "'");
+      $units_result = $database->fetch_array($units_query);
+
+        if (!GeneralHelper::is_null($units_result)) {
           // Unit exists
           $this->fill($units_result['units_name'],
                       $units_result['units_description']);
@@ -92,7 +98,6 @@
       $this->id = $database->prepare_input($this->id);
       $tariffs_query = $database->query("select 1 from " . TABLE_TARIFFS . " where units_id = '" . (int)$this->id . "'");
       $tariffs_result = $database->fetch_array($tariffs_query);
-      return tep_not_null($tariffs_result);
+      return !GeneralHelper::is_null($tariffs_result);
     }
   }
-?>

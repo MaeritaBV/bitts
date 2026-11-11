@@ -105,7 +105,7 @@ class database_mysqli implements database_interface {
     if (!$this->link) {
       return false;
     } else { // if (!$this->link)
-      return @mysqli_ping($this->link);
+      return true; //@mysqli_ping($this->link);
     } // if (!$this->link)
   } // public function is_connected()
 

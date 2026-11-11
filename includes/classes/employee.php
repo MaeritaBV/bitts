@@ -8,23 +8,26 @@
  *
  */
 
+use BitTS\Support\GeneralHelper;
+
   class employee {
     private $id, $login, $fullname, $profile, $listing;
 
     public function __construct($selection = '', $select_by = 'employees_id') {
       $this->listing = array();
 
-      if (tep_not_null($selection)) {
+      if (!GeneralHelper::is_null($selection)) {
         $database = $_SESSION['database'];
         $selection = $database->prepare_input($selection);
-
         $employee_query = $database->query("select employees_id, employees_login, employees_fullname, employees_password, profiles_id from " . TABLE_EMPLOYEES . " where " . $select_by . " = '" . $selection . "'");
         $employee_result = $database->fetch_array($employee_query);
 
-        $this->fill($employee_result['employees_id'],
-                    $employee_result['employees_login'],
-                    $employee_result['employees_fullname'],
-                    $employee_result['profiles_id']);
+        if (!GeneralHelper::is_null($employee_result)) {
+          $this->fill($employee_result['employees_id'],
+                      $employee_result['employees_login'],
+                      $employee_result['employees_fullname'],
+                      $employee_result['profiles_id']);
+        }
       } else {
         // We probably created an empty Employee object to retrieve the entire employee listing
         $this->id = 0;
@@ -58,13 +61,13 @@
     }
 
     public static function verify_login($login = '', $password = '') {
-      if (tep_not_null($login) && tep_not_null($password)) {
+      if (!GeneralHelper::is_null($login) && !GeneralHelper::is_null($password)) {
         $database = $_SESSION['database'];
         $employee_query  = "select 1 from " . TABLE_EMPLOYEES . " e";
         $employee_query .= " inner join (" . TABLE_PROFILES . " p)";
         $employee_query .= " on (e.profiles_id = p.profiles_id)";
         $employee_query .= " and e.employees_login = '" . $login . "'";
-        $employee_query .= " and e.employees_password = password('" . $password . "')";
+        $employee_query .= " and e.employees_password = CONCAT('*', UPPER(SHA1(UNHEX(SHA1('" . $password . "')))))";
         $employee_query .= ' and p.profiles_rights_login = 1';
         $employee_query = $database->query($employee_query);
         if ($employee_result = $database->fetch_array($employee_query)) {
@@ -75,7 +78,7 @@
     }
 
     public static function password_is_empty($login = '') {
-      if (tep_not_null($login)) {
+      if (!GeneralHelper::is_null($login)) {
         $database = $_SESSION['database'];
         $employee_query  = "select e.employees_password from " . TABLE_EMPLOYEES . " e";
         $employee_query .= " inner join (" . TABLE_PROFILES . " p)";
@@ -97,7 +100,7 @@
       if ($password == '') {
         $employee_query .= " set employees_password = ''";
       } else {
-        $employee_query .= " set employees_password = password('" . $password . "')";
+        $employee_query .= " set employees_password = CONCAT('*', UPPER(SHA1(UNHEX(SHA1('" . $password . "')))))";
       }
       $employee_query .= " where employees_login = '" . $login . "'";
       $database->query($employee_query);
@@ -179,11 +182,11 @@
         $this->id = $database->prepare_input($this->id);
         $employee_role_query = $database->query("select 1 from " . TABLE_EMPLOYEES_ROLES . " where employees_id = '" . (int)$this->id . "'");
         $employee_role_result = $database->fetch_array($employee_role_query);
-        if (!tep_not_null($employee_role_result)) {
+        if (GeneralHelper::is_null($employee_role_result)) {
           // No employee_role found, try for a timesheet (just to be sure)
           $timesheet_query = $database->query("select 1 from " . TABLE_TIMESHEETS . " where employees_id = '" . (int)$this->id . "'");
           $timesheet_result = $database->fetch_array($timesheet_query);
-          return tep_not_null($timesheet_result);
+          return !GeneralHelper::is_null($timesheet_result);
         } else {
           // employee_role exists
           return true;
@@ -205,7 +208,7 @@
       $id = $database->prepare_input($id);
       $employee_query = $database->query("select 1 from " . TABLE_EMPLOYEES . " where employees_id = '" . (int)$id . "'");
       $employee_result = $database->fetch_array($employee_query);
-      return tep_not_null($employee_result);
+      return !GeneralHelper::is_null($employee_result);
     }
 
     public function get_next_id() {

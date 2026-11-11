@@ -3,18 +3,21 @@
  * CODE FILE   : calendar.php
  * Project     : BitTS - BART it TimeSheet
  * Author(s)   : Erwin Beukhof
- * Date        : 22 october 2026
+ * Date        : 11 november 2026
  * Description : Calendar control
  *
  */
 
-  $calendar_start = (int)tep_strftime('yyyyMMdd', tep_datetouts('yyyy-MM-dd', $_SESSION['timesheet']->start_date));
-  $calendar_end = (int)tep_strftime('yyyyMMdd', tep_datetouts('yyyy-MM-dd', $_SESSION['timesheet']->end_date));
-  $today = (int)tep_strftime('yyyyMMdd');
+use BitTS\Support\DateTimeHelper;
+use BitTS\Support\HTMLHelper;
 
-  // Determine start day index
-  $calendar_day_index = (int)tep_strftime('cc', tep_datetouts('yyyy-MM-dd', $_SESSION['timesheet']->start_date)) - 1;
-  $calendar_day = (int)tep_strftime('dd', tep_datetouts('yyyy-MM-dd', $_SESSION['timesheet']->start_date));
+$calendar_start = (int)DateTimeHelper::strftime('yyyyMMdd', DateTimeHelper::dateToUTS('yyyy-MM-dd', $_SESSION['timesheet']->start_date));
+$calendar_end = (int)DateTimeHelper::strftime('yyyyMMdd', DateTimeHelper::dateToUTS('yyyy-MM-dd', $_SESSION['timesheet']->end_date));
+$today = (int)DateTimeHelper::strftime('yyyyMMdd');
+
+// Determine start day index
+$calendar_day_index = (int)(new DateTime($_SESSION['timesheet']->start_date))->format('N')-1;
+$calendar_day = (int)DateTimeHelper::strftime('dd', DateTimeHelper::dateToUTS('yyyy-MM-dd', $_SESSION['timesheet']->start_date));
 ?>
   <!-- calendar_control //-->
   <table border="0" cellspacing="0" cellpadding="2" class="calendar">
@@ -39,9 +42,9 @@
           <tr>
 	<?php } ?>
         <td class="<?php echo ($counter==$today?'calendar-today':($colindex%7 >= 0 && $colindex%7 <= 4?'calendar-weekday':'calendar-weekend')) ?>" align="center">
-	  <?php echo tep_draw_form('select_day_'.$calendar_day, tep_href_link(FILENAME_TIMEREGISTRATION)) . tep_create_parameters(array('mPath'=>'21','selected_date'=>tep_datetouts('%Y-%m-%d', $_SESSION['timesheet']->start_date, $calendar_day - 1),'action'=>'select_project'), array('period', 'sort_order', 'activity_id'), 'hidden_field'); ?>
-            <?php //echo '<a href=' . tep_href_link(FILENAME_TIMEREGISTRATION, tep_create_parameters(array('mPath'=>'21','selected_date'=>tep_datetouts('%Y-%m-%d', $_SESSION['timesheet']->start_date, $calendar_day - 1),'action'=>'select_project'), array('period', 'activity_id'))) . '>' . $calendar_day . '</a>';
-            echo tep_href_submit($calendar_day); ?>
+	  <?php echo HTMLHelper::draw_form('select_day_'.$calendar_day, HTMLHelper::href_link(FILENAME_TIMEREGISTRATION)) . HTMLHelper::create_parameters(array('mPath'=>'21','selected_date'=>DateTimeHelper::dateToUTS('%Y-%m-%d', $_SESSION['timesheet']->start_date, $calendar_day - 1),'action'=>'select_project'), array('period', 'sort_order', 'activity_id'), 'hidden_field'); ?>
+            <?php //echo '<a href=' . HTMLHelper::href_link(FILENAME_TIMEREGISTRATION, HTMLHelper::create_parameters(array('mPath'=>'21','selected_date'=>DateTimeHelper::dateToUTS('%Y-%m-%d', $_SESSION['timesheet']->start_date, $calendar_day - 1),'action'=>'select_project'), array('period', 'activity_id'))) . '>' . $calendar_day . '</a>';
+            echo HTMLHelper::href_submit($calendar_day); ?>
           </form>
         </td>
       <?php }

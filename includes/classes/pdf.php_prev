@@ -123,7 +123,7 @@
 
     public function InvoiceTableContents($date, $employee_name, $activity_amount, $units_name = '', $tariff = 0.00, $travel_distance = 0, $expenses = 0.00, $ticket_number = '', $total_value = 0.00, $comment = '') {
       $this->SetFont('Arial', '', 10);
-      $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+      $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
       if (!$this->per_employee) {
         $this->Cell(50, 5, $employee_name);
       }
@@ -240,7 +240,7 @@
 
     public function TravelDistancesAndExpensesTableContents($date, $travel_distance, $travel_description, $expenses, $project_name, $role_name) {
       $this->SetFont('Arial', '', 10);
-      $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+      $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
       $this->Cell(22, 5, $travel_distance, 0, 0, 'R');
       $this->Cell(126, 5, $travel_description, 0, 0, 'L');
       $this->Cell(22, 5, tep_number_db_to_user($expenses, 2), 0, 0, 'R');
@@ -313,7 +313,7 @@
 
     public function ConsolidatedProjectsTableContents($date, $project_name, $role_name, $activity_amount, $units_name, $tariff = 0.00, $total_value = 0.00, $travel_distance = 0, $expenses = 0.00, $ticket_number = '', $comment = '') {
       $this->SetFont('Arial', '', 10);
-      $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+      $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
 
       $tempX = $this->GetX();
       $tempY = $this->GetY();

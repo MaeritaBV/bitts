@@ -1,12 +1,17 @@
 <?php
-/****************************************************************************
- * CLASS FILE  : customer.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 21 march 2014
- * Description : Customer class
+/**
+ * customer.php
  *
+ * Customer class
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 09 november 2026
  */
+
+use BitTS\Support\GeneralHelper;
 
   class customer {
     private $id, $name, $id_external, $billing_name1, $billing_name2, $billing_address, $billing_postcode, $billing_city, $billing_country, $billing_email_address, $billing_phone, $billing_fax, $billing_show_logo, $listing;
@@ -22,7 +27,7 @@
         $customer_query = $database->query("select customers_name, customers_id_external, customers_billing_name1, customers_billing_name2, customers_billing_address, customers_billing_postcode, customers_billing_city, customers_billing_country, customers_billing_email_address, customers_billing_phone, customers_billing_fax, customers_billing_show_logo from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$id . "'");
         $customer_result = $database->fetch_array($customer_query);
 
-        if (tep_not_null($customer_result)) {
+        if (!GeneralHelper::is_null($customer_result)) {
           // Customer exists
           $this->fill($customer_result['customers_name'],
                       $customer_result['customers_id_external'],
@@ -153,7 +158,7 @@
         $this->id = $database->prepare_input($this->id);
         $project_query = $database->query("select 1 from " . TABLE_PROJECTS . " where customers_id = '" . (int)$this->id . "'");
         $project_result = $database->fetch_array($project_query);
-        return tep_not_null($project_result);
+        return !GeneralHelper::is_null($project_result);
       }
     }
 
@@ -171,7 +176,7 @@
       $id = $database->prepare_input($id);
       $customer_query = $database->query("select 1 from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$id . "'");
       $customer_result = $database->fetch_array($customer_query);
-      return tep_not_null($customer_result);
+      return !GeneralHelper::is_null($customer_result);
     }
 
     public function get_next_id() {

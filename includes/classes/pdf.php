@@ -8,13 +8,16 @@
  * 
  * @package BitTS - BART it TimeSheet
  * @author  Erwin Beukhof
- * @version 24 oktober 2017
+ * @version 11 november 2026
  */
 
 require 'fpdf.php';
 
+use BitTS\Support\DateTimeHelper;
+use BitTS\Support\DBHelper;
+
 class PDF extends FPDF {
-  private $per_employee, $show_tariff, $show_travel_distance, $show_expenses, $show_ticket_number;
+  private $per_employee, $show_tariff, $show_travel_distance, $show_expenses, $show_ticket_number, $show_comment;
 
   //public function Header() {
     //$this->Image(DIR_WS_IMAGES . COMPANY_BANNER, null, null, 40);
@@ -67,20 +70,20 @@ class PDF extends FPDF {
     $this->SetLineWidth(.3);
     $this->SetFont('Arial', '', 12);
     $this->Cell(30, 6, REPORT_TEXT_CUSTOMER_NAME, 0, 0, 'L');
-    $this->Cell(50, 6, utf8_decode($customer_name), 0, 0, 'L');
+    $this->Cell(50, 6, mb_convert_encoding($customer_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
     $this->Ln();
     $this->Cell(30, 6, REPORT_TEXT_PERIOD, 0, 0, 'L');
     $this->Cell(50, 6, $period, 0, 0, 'L');
     $this->Ln();
     $this->Cell(30, 6, REPORT_TEXT_PROJECT_NAME, 0, 0, 'L');
-    $this->Cell(50, 6, utf8_decode($project_name), 0, 0, 'L');
+    $this->Cell(50, 6, mb_convert_encoding($project_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
     $this->Ln();
     $this->Cell(30, 6, REPORT_TEXT_ROLE_NAME, 0, 0, 'L');
-    $this->Cell(50, 6, utf8_decode($role_name), 0, 0, 'L');
+    $this->Cell(50, 6, mb_convert_encoding($role_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
     $this->Ln();
     if (!$employee_name == '') {
       $this->Cell(30, 6, REPORT_TEXT_EMPLOYEE_NAME, 0, 0, 'L');
-      $this->Cell(50, 6, utf8_decode($employee_name), 0, 0, 'L');
+      $this->Cell(50, 6, mb_convert_encoding($employee_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
       $this->Ln();
     }
     $this->Ln(6);
@@ -127,28 +130,28 @@ class PDF extends FPDF {
 
   public function InvoiceTableContents($date, $employee_name, $activity_amount, $units_name = '', $tariff = 0.00, $travel_distance = 0, $expenses = 0.00, $ticket_number = '', $total_value = 0.00, $comment = '') {
     $this->SetFont('Arial', '', 10);
-    $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+    $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
     if (!$this->per_employee) {
-      $this->Cell(50, 5, utf8_decode($employee_name));
+      $this->Cell(50, 5, mb_convert_encoding($employee_name, 'ISO-8859-1', 'UTF-8'));
     }
-    $this->Cell(20, 5, tep_number_db_to_user($activity_amount, 2), 0, 0, 'R');
+    $this->Cell(20, 5, DBHelper::number_db_to_user($activity_amount, 2), 0, 0, 'R');
     if (!$this->per_employee && $this->show_tariff) {
-      $this->Cell(22, 5, tep_number_db_to_user($tariff, 2), 0, 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($tariff, 2), 0, 0, 'R');
     }
     if ($this->show_travel_distance) {
       $this->Cell(22, 5, $travel_distance, 0, 0, 'R');
     }
     if ($this->show_expenses) {
-      $this->Cell(22, 5, tep_number_db_to_user($expenses, 2), 0, 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($expenses, 2), 0, 0, 'R');
     }
     if ($this->show_ticket_number) {
       $this->Cell(35, 5, $ticket_number, 0, 0, 'C');
     }
     if ($this->show_tariff) {
-      $this->Cell(22, 5, tep_number_db_to_user($total_value, 2), 0, 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_value, 2), 0, 0, 'R');
     }
     if ($this->show_comment) {
-      $this->MultiCell(0, 5, utf8_decode($comment));
+      $this->MultiCell(0, 5, mb_convert_encoding($comment, 'ISO-8859-1', 'UTF-8'));
     }
     //$this->Ln();
   }
@@ -160,7 +163,7 @@ class PDF extends FPDF {
     if (!$this->per_employee) {
       $this->Cell(50, 5);
     }
-    $this->Cell(20, 5, tep_number_db_to_user($total_amount, 2), 'T', 0, 'R');
+    $this->Cell(20, 5, DBHelper::number_db_to_user($total_amount, 2), 'T', 0, 'R');
     if (!$this->per_employee && $this->show_tariff) {
       $this->Cell(22, 5);
     }
@@ -168,13 +171,13 @@ class PDF extends FPDF {
       $this->Cell(22, 5, $total_travel_distance, 'T', 0, 'R');
     }
     if ($this->show_expenses) {
-      $this->Cell(22, 5, tep_number_db_to_user($total_expenses, 2), 'T', 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_expenses, 2), 'T', 0, 'R');
     }
     if ($this->show_ticket_number) {
       $this->Cell(35, 5);
     }
     if ($this->show_tariff) {
-      $this->Cell(22, 5, tep_number_db_to_user($total_value, 2), 'T', 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_value, 2), 'T', 0, 'R');
     }
     $this->Ln();
   }
@@ -209,7 +212,7 @@ class PDF extends FPDF {
     $this->SetLineWidth(.3);
     $this->SetFont('Arial', '', 12);
     $this->Cell(30, 6, REPORT_TEXT_EMPLOYEE_NAME, 0, 0, 'L');
-    $this->Cell(50, 6, utf8_decode($employee_name), 0, 0, 'L');
+    $this->Cell(50, 6, mb_convert_encoding($employee_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
     $this->Ln();
     $this->Cell(30, 6, REPORT_TEXT_PERIOD, 0, 0, 'L');
     $this->Cell(50, 6, $period, 0, 0, 'L');
@@ -226,7 +229,7 @@ class PDF extends FPDF {
     $this->Cell(50, 6, $period, 0, 0, 'L');
     $this->Ln();
     $this->Cell(30, 6, REPORT_TEXT_EMPLOYEE_NAME, 0, 0, 'L');
-    $this->Cell(50, 6, utf8_decode($employee_name), 0, 0, 'L');
+    $this->Cell(50, 6, mb_convert_encoding($employee_name, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
     $this->Ln();
     $this->Ln(6);
   }
@@ -244,10 +247,10 @@ class PDF extends FPDF {
 
   public function TravelDistancesAndExpensesTableContents($date, $travel_distance, $travel_description, $expenses, $project_name, $role_name) {
     $this->SetFont('Arial', '', 10);
-    $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+    $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
     $this->Cell(22, 5, $travel_distance, 0, 0, 'R');
-    $this->Cell(126, 5, utf8_decode($travel_description), 0, 0, 'L');
-    $this->Cell(22, 5, tep_number_db_to_user($expenses, 2), 0, 0, 'R');
+    $this->Cell(126, 5, mb_convert_encoding($travel_description, 'ISO-8859-1', 'UTF-8'), 0, 0, 'L');
+    $this->Cell(22, 5, DBHelper::number_db_to_user($expenses, 2), 0, 0, 'R');
     $this->Ln();
   }
 
@@ -257,7 +260,7 @@ class PDF extends FPDF {
     $this->Cell(20, 5);
     $this->Cell(22, 5, $total_travel_distance, 'T', 0, 'R');
     $this->Cell(126, 5);
-    $this->Cell(22, 5, tep_number_db_to_user($total_expenses, 2), 'T', 0, 'R');
+    $this->Cell(22, 5, DBHelper::number_db_to_user($total_expenses, 2), 'T', 0, 'R');
     $this->Ln();
   }
 
@@ -317,16 +320,16 @@ class PDF extends FPDF {
 
   public function ConsolidatedProjectsTableContents($date, $project_name, $role_name, $activity_amount, $units_name, $tariff = 0.00, $total_value = 0.00, $travel_distance = 0, $expenses = 0.00, $ticket_number = '', $comment = '') {
     $this->SetFont('Arial', '', 10);
-    $this->Cell(20, 5, tep_strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
+    $this->Cell(20, 5, DateTimeHelper::strftime(DATE_FORMAT_SHORT, $date), 0, 0, 'C');
 
     $tempX = $this->GetX();
     $tempY = $this->GetY();
-    $this->MultiCell(50, 5, utf8_decode($project_name) . "\n" . utf8_decode($role_name), 0, 'L');
+    $this->MultiCell(50, 5, mb_convert_encoding($project_name, 'ISO-8859-1', 'UTF-8') . "\n" . mb_convert_encoding($role_name, 'ISO-8859-1', 'UTF-8'), 0, 'L');
     $tempX += 50;
     $tempYMax = $this->GetY();
 
     $this->SetXY($tempX, $tempY);
-    $this->Cell(15, 5, tep_number_db_to_user($activity_amount, 2), 0, 0, 'R');
+    $this->Cell(15, 5, DBHelper::number_db_to_user($activity_amount, 2), 0, 0, 'R');
     $this->MultiCell(39, 5, $units_name, 0, 'L');
     $tempX += 54;
     if ($this->GetY() > $tempYMax) {
@@ -335,20 +338,20 @@ class PDF extends FPDF {
     $this->SetXY($tempX, $tempY);
 
     if ($this->show_tariff) {
-      $this->Cell(15, 5, tep_number_db_to_user($tariff, 2), 0, 0, 'R');
-      $this->Cell(22, 5, tep_number_db_to_user($total_value, 2), 0, 0, 'R');
+      $this->Cell(15, 5, DBHelper::number_db_to_user($tariff, 2), 0, 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_value, 2), 0, 0, 'R');
     }
     if ($this->show_travel_distance) {
       $this->Cell(15, 5, $travel_distance, 0, 0, 'R');
     }
     if ($this->show_expenses) {
-      $this->Cell(22, 5, tep_number_db_to_user($expenses, 2), 0, 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($expenses, 2), 0, 0, 'R');
     }
     if ($this->show_ticket_number) {
       $this->Cell(22, 5, $ticket_number, 0, 0, 'C');
     }
     if ($this->show_comment) {
-      $this->MultiCell(0, 5, utf8_decode($comment));
+      $this->MultiCell(0, 5, mb_convert_encoding($comment, 'ISO-8859-1', 'UTF-8'));
     }
     if ($this->GetY() < $tempYMax) {
       $this->SetY($tempYMax);
@@ -362,12 +365,12 @@ class PDF extends FPDF {
     $tempX = $this->GetX() + 70;
     $tempY = $this->GetY();
     $this->SetXY($tempX, $tempY);
-    $this->Cell(15, 5, tep_number_db_to_user($total_amount, 2), 'T', 0, 'R');
+    $this->Cell(15, 5, DBHelper::number_db_to_user($total_amount, 2), 'T', 0, 'R');
     $tempX += 54;
     if ($this->show_tariff) {
       $tempX += 15;
       $this->SetXY($tempX, $tempY);
-      $this->Cell(22, 5, tep_number_db_to_user($total_value, 2), 'T', 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_value, 2), 'T', 0, 'R');
       $tempX += 22;
     }
     if ($this->show_travel_distance) {
@@ -377,7 +380,7 @@ class PDF extends FPDF {
     }
     if ($this->show_expenses) {
       $this->SetXY($tempX, $tempY);
-      $this->Cell(22, 5, tep_number_db_to_user($total_expenses, 2), 'T', 0, 'R');
+      $this->Cell(22, 5, DBHelper::number_db_to_user($total_expenses, 2), 'T', 0, 'R');
     }
     $this->Ln();
   }
@@ -495,5 +498,9 @@ class PDF extends FPDF {
     }
     $this->SetX(($this->w-array_sum($width))/2);
     $this->Cell(array_sum($width),0,'','T');
+  }
+
+  public function getMetadata($key) {
+    return $this->metadata[$key] ?? null;
   }
 }

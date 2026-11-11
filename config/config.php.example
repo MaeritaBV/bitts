@@ -1,0 +1,55 @@
+<?php
+/**
+ * configuration.php
+ *
+ * Configuration parameters.
+ * Semi-permanent and basic configuration parameters are placed here.
+ *
+ * PHP version 5 >= 5.3.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 11 november 2026
+ */
+
+// define the project version
+define('PROJECT_NAME',    'BitTS');
+define('PROJECT_VERSION', 'v8.3.0');
+
+// * DIR_WS_* = Webserver directories (virtual/URL)
+define('DIR_WS_APPLICATION', '/');
+define('DIR_WS_CONFIG',      '../config/');
+define('DIR_WS_SUPPORT',     '../app/Support/');
+define('DIR_WS_INCLUDES',    '../includes/');
+define('DIR_WS_BOXES',       DIR_WS_INCLUDES . 'boxes/');
+define('DIR_WS_CLASSES',     DIR_WS_INCLUDES . 'Classes/');
+define('DIR_WS_FUNCTIONS',   DIR_WS_INCLUDES . 'functions/');
+define('DIR_WS_IMAGES',      'images/');
+define('DIR_WS_ICONS',       DIR_WS_IMAGES . 'icons/');
+define('DIR_WS_IMAGES_LANG', DIR_WS_IMAGES . 'lang/');
+define('DIR_WS_LANG',        '../lang/');
+
+// Define the webserver and path parameters
+define('HTTP_SERVER',         'http://localhost:8888'); // eg, http://localhost - should not be empty for productive servers
+define('HTTPS_SERVER',        'https://localhost:8888'); // eg, https://localhost - should not be empty for productive servers
+define('ENABLE_SSL',          false); // secure webserver for application?
+define('HTTP_COOKIE_DOMAIN',  'localhost');
+define('HTTPS_COOKIE_DOMAIN', 'localhost');
+
+// define our database connection
+define('DB_SERVER_NAME',     'localhost'); // eg, localhost - should not be empty for productive servers
+define('DB_SERVER_TYPE',     'mysqli'); // eg, mysql - database server type
+define('DB_SERVER_USERNAME', 'dbuser');
+define('DB_SERVER_PASSWORD', 'dbpass');
+define('DB_DATABASE_NAME',   'dbname'); // database name
+define('DB_TABLES_PREFIX',   '');
+define('DB_SERVER_PORT',     '3306');
+define('STORE_SESSIONS',     'mysql'); // leave empty '' for default handler or set to 'mysql'
+
+define('ENABLE_TICKET_DATABASE_LOOKUPS', false); // enable lookups in ticket database (true/false)
+define('DB_TICKET_SERVER_NAME',          'localhost'); // eg, localhost - should not be empty for productive servers
+define('DB_TICKET_SERVER_TYPE',          'mysqli'); // eg, mysql - database server type
+define('DB_TICKET_SERVER_USERNAME',      'dbuser');
+define('DB_TICKET_SERVER_PASSWORD',      'dbpass');
+define('DB_TICKET_DATABASE_NAME',        'dbname'); // ticket database name
+define('DB_TICKET_DATABASE_QUERY',       'SELECT ticket.tn AS ticket_nr, ticket.title AS naam, IFNULL(queue.name, \'\') AS queue_naam, IFNULL(customer_company.name, ticket.customer_id) AS klant FROM ticket LEFT JOIN queue ON (queue.id = ticket.queue_id) LEFT JOIN customer_company ON (customer_company.customer_id = ticket.customer_id) WHERE ticket.queue_id NOT IN (1, 2, 3, 4) AND (DATEDIFF(ticket.create_time, \'%TICKET_DATE%\') >= -30 OR EXISTS (SELECT 1 FROM article WHERE article.ticket_id = ticket.id AND DATEDIFF(article.create_time, \'%TICKET_DATE%\') >= -30)) ORDER BY ticket.tn;'); // ticket database query
