@@ -3,7 +3,7 @@
  * CODE FILE   : header.php
  * Project     : BitTS - BART it TimeSheet
  * Author(s)   : Erwin Beukhof
- * Date        : 30 october 2026
+ * Date        : 12 november 2026
  * Description : Header file
  *               Contains html declarations and parameters
  *               Creates error- and/or info message on top of page
@@ -12,6 +12,7 @@
  *               http://www.oscommerce.com
  */
 
+use BitTS\Support\GeneralHelper;
 use BitTS\Support\HTMLHelper;
 ?>
 <!DOCTYPE html>
