@@ -8,25 +8,25 @@
  *
  * @package BitTS
  * @author  Erwin Beukhof
- * @version 11 november 2026
+ * @version 18 november 2026
  */
 
-define('TABLE_ACTIVITIES',      DB_TABLES_PREFIX . 'activities');
-define('TABLE_BENEFITS',        DB_TABLES_PREFIX . 'benefits');
-define('TABLE_BUSINESS_UNITS',  DB_TABLES_PREFIX . 'business_units');
-define('TABLE_CATEGORIES',      DB_TABLES_PREFIX . 'categories');
-define('TABLE_CONFIGURATION',   DB_TABLES_PREFIX . 'configuration');
-define('TABLE_CUSTOMERS',       DB_TABLES_PREFIX . 'customers');
-define('TABLE_EMPLOYEES_ROLES', DB_TABLES_PREFIX . 'employees_roles');
-define('TABLE_PROFILES',        DB_TABLES_PREFIX . 'profiles');
-define('TABLE_EMPLOYEES',       DB_TABLES_PREFIX . 'employees');
-define('TABLE_UNITS',           DB_TABLES_PREFIX . 'units');
-define('TABLE_LANGUAGES',       DB_TABLES_PREFIX . 'languages');
-define('TABLE_PROJECTS',        DB_TABLES_PREFIX . 'projects');
-define('TABLE_ROLES',           DB_TABLES_PREFIX . 'roles');
-define('TABLE_SESSIONS',        DB_TABLES_PREFIX . 'sessions');
-define('TABLE_TARIFFS',         DB_TABLES_PREFIX . 'tariffs');
-define('TABLE_TIMESHEETS',      DB_TABLES_PREFIX . 'timesheets');
-define('TABLE_PUNCH_CLOCK',     DB_TABLES_PREFIX . 'punch_clock');
+define('TABLE_ACTIVITIES',      'b2_activities');
+define('TABLE_BENEFITS',        'b2_benefits');
+define('TABLE_BUSINESS_UNITS',  'b2_business_units');
+define('TABLE_CATEGORIES',      'b2_categories');
+define('TABLE_CONFIGURATION',   'b2_configuration');
+define('TABLE_CUSTOMERS',       'b2_customers');
+define('TABLE_EMPLOYEES_ROLES', 'b2_employees_roles');
+define('TABLE_PROFILES',        'b2_profiles');
+define('TABLE_EMPLOYEES',       'b2_employees');
+define('TABLE_UNITS',           'b2_units');
+define('TABLE_LANGUAGES',       'b2_languages');
+define('TABLE_PROJECTS',        'b2_projects');
+define('TABLE_ROLES',           'b2_roles');
+define('TABLE_SESSIONS',        'b2_sessions');
+define('TABLE_TARIFFS',         'b2_tariffs');
+define('TABLE_TIMESHEETS',      'b2_timesheets');
+define('TABLE_PUNCH_CLOCK',     'b2_punch_clock');
 
-define('VIEW_BENEFITS',         DB_TABLES_PREFIX . 'v_benefits');
+define('VIEW_BENEFITS',         'b2_v_benefits');
