@@ -6,17 +6,16 @@
  * Data validation sequence
  * Storing of entered data (via profile object)
  *
- * PHP version 5 >= 5.3.0
+ * PHP version 8 >= 8.4.0
  *
  * @package BitTS
  * @author  Erwin Beukhof
- * @version 04 november 2026
+ * @version 25 november 2026
  */
 
 // application_top //
 require '../includes/application_top.php';
 
-use BitTS\Support\DateTimeHelper;
 use BitTS\Support\GeneralHelper;
 use BitTS\Support\HTMLHelper;
 

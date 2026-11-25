@@ -1,20 +1,20 @@
 <?php
-/****************************************************************************
- * CODE FILE   : administration_timesheets.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 30 october 2026
- * Description : Timesheet administration form
- *               (Un)locking timesheets
+/**
+ * administration_timesheets.php
  *
- *               Framework: osCommerce, Open Source E-Commerce Solutions
- *               http://www.oscommerce.com
+ * Timesheet administration form
+ * (Un)locking timesheets
+ *
+ * PHP version 8 >= 8.4.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 25 november 2026
  */
 
 // application_top //
 require '../includes/application_top.php';
 
-use BitTS\Support\DateTimeHelper;
 use BitTS\Support\GeneralHelper;
 use BitTS\Support\HTMLHelper;
 

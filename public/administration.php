@@ -1,16 +1,19 @@
 <?php
-/****************************************************************************
- * CODE FILE   : administration.php
- * Project     : BitTS - BART it TimeSheet
- * Author(s)   : Erwin Beukhof
- * Date        : 04 november 2026
- * Description : Administration main form
+/**
+ * administration.php
+ *
+ * Administration main form
+ *
+ * PHP version 8 >= 8.4.0
+ *
+ * @package BitTS
+ * @author  Erwin Beukhof
+ * @version 25 november 2026
  */
 
 // application_top //
 require '../includes/application_top.php';
 
-use BitTS\Support\DateTimeHelper;
 use BitTS\Support\GeneralHelper;
 use BitTS\Support\HTMLHelper;
 

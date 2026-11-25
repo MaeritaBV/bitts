@@ -4,12 +4,14 @@
  *
  * General functions for (Laravel) compatibility and future migration purposes
  *
- * PHP version 5 >= 5.3.0
+ * PHP version 8 >= 8.5.0
  *
  * @package BitTS
  * @author  Erwin Beukhof
- * @version 05 november 2026
+ * @version 25 november 2026
  */
+
+use BitTS\Support\GeneralHelper;
 
 // Recursively handle magic_quotes_gpc turned off.
 // This is due to the possibility of have an array in
